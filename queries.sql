@@ -1,4 +1,4 @@
--- Deliverable 4 queries - airport flight system (sqlite)
+-- queries for the airport db (sqlite)
 -- dates are hardcoded so results stay the same whenever this gets run
 
 .print '--- Req 1 ---'
@@ -99,8 +99,8 @@ ORDER BY 1;
 .print ''
 .print '--- Req 9 ---'
 -- Requirement 9: View
--- how full each upcoming flight is, emptiest first. the view already does all
--- the joins + counting so this is way shorter than doing it from scratch
+-- how full each upcoming flight is, emptiest first
+-- view does the joins + counting so this stays short
 SELECT FlightNumber, AirlineName, DepartureAirport, ArrivalAirport,
        BookedSeats, AvailableSeats,
        ROUND(100.0 * BookedSeats / SeatCapacity, 1) AS PercentFull,

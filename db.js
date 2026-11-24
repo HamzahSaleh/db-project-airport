@@ -78,7 +78,7 @@ function setFlightStatus(db, flightId, status) {
   return db.prepare('UPDATE Flight SET Status = ? WHERE FlightID = ?').run(status, flightId).changes;
 }
 
-// the view from deliverable 3 already does the joins + counting
+// the view already does the joins + counting
 function occupancyReport(db) {
   return db.prepare(`
     SELECT FlightID, FlightNumber, DepartureAirport AS "From", ArrivalAirport AS "To", Status,

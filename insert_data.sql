@@ -1,6 +1,5 @@
--- Deliverable 3: Airport Flight System - synthetic sample data
--- Run AFTER schema.sql. All names, contacts, and passport identifiers are invented.
--- 8 airlines + 14 airports + 30 passengers + 24 flights + 55 bookings = 131 rows.
+-- sample data, run after schema.sql. everything is made up (names, emails, passports)
+-- 8 airlines, 14 airports, 30 passengers, 24 flights, 55 bookings
 PRAGMA foreign_keys = ON;
 
 BEGIN TRANSACTION;
@@ -64,8 +63,7 @@ INSERT INTO Passenger
 (29, 'Ivy',    'Cooper',    'ivy.cooper@example.com',    '2002-02-02', 'TESTP0029'),
 (30, 'Ben',    'Foster',    'ben.foster@example.com',    '2001-03-03', 'TESTP0030');
 
--- Flight times are stored as UTC timestamps; repeated flight numbers on
--- different departure dates are allowed by the unique combination.
+-- times are UTC. same flight number on diff days is ok (unique is number + date)
 INSERT INTO Flight
 (FlightID, AirlineID, DepartureAirportID, ArrivalAirportID,
  FlightNumber, DepartureDateTime, ArrivalDateTime, SeatCapacity, Status) VALUES

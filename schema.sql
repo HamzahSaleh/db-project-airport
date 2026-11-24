@@ -1,9 +1,9 @@
--- Deliverable 3: Airport Flight System - SQLite database schema
--- Run with SQLite 3. See README.md for setup instructions.
+-- airport flight system schema (sqlite)
+-- run this first, then insert_data.sql
 
 PRAGMA foreign_keys = ON;
 
--- Drop dependent objects before the tables they reference.
+-- drop view/indexes first, then tables in reverse FK order so nothing breaks
 DROP VIEW IF EXISTS FlightBookingSummary;
 DROP INDEX IF EXISTS idx_booking_date;
 DROP INDEX IF EXISTS idx_flight_departure;
@@ -46,8 +46,8 @@ CREATE TABLE Flight (
     DepartureAirportID  INTEGER NOT NULL,
     ArrivalAirportID    INTEGER NOT NULL,
     FlightNumber        TEXT NOT NULL,
-    DepartureDateTime   TEXT NOT NULL, -- ISO-8601 in UTC: YYYY-MM-DD HH:MM:SS
-    ArrivalDateTime     TEXT NOT NULL, -- ISO-8601 in UTC: YYYY-MM-DD HH:MM:SS
+    DepartureDateTime   TEXT NOT NULL, -- UTC, YYYY-MM-DD HH:MM:SS
+    ArrivalDateTime     TEXT NOT NULL, -- UTC, YYYY-MM-DD HH:MM:SS
     SeatCapacity        INTEGER NOT NULL CHECK (SeatCapacity > 0),
     Status              TEXT NOT NULL DEFAULT 'Scheduled'
                             CHECK (Status IN ('Scheduled', 'Delayed', 'Cancelled', 'Departed')),
@@ -63,25 +63,25 @@ CREATE TABLE Booking (
     BookingID    INTEGER PRIMARY KEY,
     PassengerID  INTEGER NOT NULL,
     FlightID     INTEGER NOT NULL,
-    BookingDate  TEXT NOT NULL, -- ISO-8601 date: YYYY-MM-DD
+    BookingDate  TEXT NOT NULL, -- YYYY-MM-DD
     SeatNumber   TEXT NOT NULL,
     TravelClass  TEXT NOT NULL CHECK (TravelClass IN ('Economy', 'Premium Economy', 'Business', 'First')),
     FarePaid     REAL NOT NULL CHECK (FarePaid >= 0),
     IsCheckedIn  INTEGER NOT NULL DEFAULT 0 CHECK (IsCheckedIn IN (0, 1)),
     FOREIGN KEY (PassengerID) REFERENCES Passenger(PassengerID),
     FOREIGN KEY (FlightID) REFERENCES Flight(FlightID),
-    UNIQUE (FlightID, SeatNumber),    -- No two reservations may occupy the same seat on one flight.
-    UNIQUE (PassengerID, FlightID)   -- One reservation per passenger per flight for this project.
+    UNIQUE (FlightID, SeatNumber),    -- no double booked seats
+    UNIQUE (PassengerID, FlightID)   -- 1 booking per person per flight
 );
 
--- Supports daily booking-trend reports and reservation-date filters.
+-- for filtering/grouping bookings by date
 CREATE INDEX idx_booking_date ON Booking(BookingDate);
 
--- Supports departure-date filtering and ordering in flight schedules.
+-- departure board stuff filters + sorts on this
 CREATE INDEX idx_flight_departure ON Flight(DepartureDateTime);
 
--- Useful report: route, airline, booking activity and remaining seats per flight.
--- LEFT JOIN ensures flights with zero bookings are still included.
+-- per flight summary: route, airline, seats booked/left, revenue
+-- LEFT JOIN so flights w/ 0 bookings still show up
 CREATE VIEW FlightBookingSummary AS
 SELECT
     f.FlightID,

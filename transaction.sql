@@ -1,10 +1,8 @@
--- Deliverable 4 transaction
--- scenario: flight 3 (AA2301 BNA->DFW) gets cancelled, so we add a replacement
--- flight the next day, move everyone's bookings over, and mark flight 3 cancelled.
--- these have to happen together, otherwise people could end up booked on a
--- cancelled flight. ends w/ ROLLBACK so the sample data doesnt actually change
--- (swap to COMMIT to keep it). if something errors, -bail quits before commit
--- and sqlite rolls it back
+-- transaction demo
+-- flight 3 (AA2301 BNA->DFW) gets cancelled -> add replacement flight next day,
+-- move the bookings, cancel flight 3. all or nothing so nobody's stuck on a cancelled flight
+-- ends w/ ROLLBACK so sample data doesnt change (use COMMIT to keep it)
+-- -bail = quit on error before commit, sqlite rolls it back
 
 PRAGMA foreign_keys = ON;
 

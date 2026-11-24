@@ -1,4 +1,4 @@
-// Recreates airport.db from schema.sql and insert_data.sql.
+// wipes airport.db and rebuilds it from the sql files
 const fs = require('fs');
 const path = require('path');
 const Database = require('better-sqlite3');
