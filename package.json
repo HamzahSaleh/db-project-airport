@@ -1,0 +1,16 @@
+{
+  "name": "airport-flight-system",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "setup": "node setup_db.js",
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Airport Flight System - final project (Node.js + SQLite)",
+  "dependencies": {
+    "better-sqlite3": "^11.10.0"
+  }
+}

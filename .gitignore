@@ -1,0 +1,5 @@
+node_modules/
+airport.db
+*.db
+.env
+dbapp.zip
